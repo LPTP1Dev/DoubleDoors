@@ -1,4 +1,5 @@
 name: DoubleDoors
 version: '${version}'
 main: me.lptp1.doubledoors.DoubleDoors
+description: A plugin that allows you to open two doors at once.
 api-version: 1.20
