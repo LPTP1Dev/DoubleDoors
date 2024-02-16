@@ -1,0 +1,4 @@
+name: DoubleDoors
+version: '${version}'
+main: me.lptp1.doubledoors.DoubleDoors
+api-version: 1.20
