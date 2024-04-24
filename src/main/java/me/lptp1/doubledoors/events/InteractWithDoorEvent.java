@@ -14,7 +14,8 @@ public class InteractWithDoorEvent implements Listener {
     public void onInteractWithDoor(PlayerInteractEvent event) { // This method is called when a player interacts with a block
 
         // Check if the block the player interacted with is a door, but not a trapdoor
-        if (!DoorUtils.isDoorBlock(event.getClickedBlock())) {
+        // Also check if the event was actually a right click
+        if (!DoorUtils.isDoorBlock(event.getClickedBlock()) || !event.getAction().isRightClick()) {
             return;
         }
 

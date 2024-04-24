@@ -3,19 +3,24 @@ package me.lptp1.doubledoors;
 import me.lptp1.doubledoors.events.InteractWithDoorEvent;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.util.logging.Logger;
+
 public final class DoubleDoors extends JavaPlugin {
+
+    private Logger log;
 
     @Override
     public void onEnable() {
+        log = getLogger();
         // Plugin startup logic
-        System.out.println("DoubleDoors is starting up...");
+        log.info("DoubleDoors is starting up...");
         getServer().getPluginManager().registerEvents(new InteractWithDoorEvent(), this);
-        System.out.println("DoubleDoors has been enabled!");
+        log.info("DoubleDoors has been enabled!");
     }
 
     @Override
     public void onDisable() {
         // Plugin shutdown logic
-        System.out.println("DoubleDoors has been disabled!");
+        log.info("DoubleDoors has been disabled!");
     }
 }
