@@ -6,9 +6,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import java.util.logging.Logger;
 
 public final class DoubleDoors extends JavaPlugin {
-    
+
     private Logger log;
-    
+
     @Override
     public void onEnable() {
         log = getLogger();
@@ -17,7 +17,7 @@ public final class DoubleDoors extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new InteractWithDoorEvent(), this);
         log.info("DoubleDoors has been enabled!");
     }
-    
+
     @Override
     public void onDisable() {
         // Plugin shutdown logic
