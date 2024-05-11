@@ -25,32 +25,68 @@ public class InteractWithDoorEvent implements Listener {
 
         boolean newDoorState = !door.isOpen();
 
-        if (door.getFacing() == BlockFace.NORTH || door.getFacing() == BlockFace.SOUTH) {
-            Block eastBlock = doorBlock.getRelative(BlockFace.EAST, 1);
-            Block westBlock = doorBlock.getRelative(BlockFace.WEST, 1);
-            updateNextDoors(door, eastBlock, westBlock, newDoorState);
-        }
-
-        if (door.getFacing() == BlockFace.EAST || door.getFacing() == BlockFace.WEST) {
-            Block northBlock = doorBlock.getRelative(BlockFace.NORTH, 1);
-            Block southBlock = doorBlock.getRelative(BlockFace.SOUTH, 1);
-            updateNextDoors(door, northBlock, southBlock, newDoorState);
+        switch(door.getFacing()) {
+            case NORTH: {
+                switch(door.getHinge()) {
+                    case LEFT:
+                        Block eastBlock = doorBlock.getRelative(BlockFace.EAST, 1);
+                        updateNextDoor(door, eastBlock, newDoorState);
+                        break;
+                    case RIGHT:
+                        Block westBlock = doorBlock.getRelative(BlockFace.WEST, 1);
+                        updateNextDoor(door, westBlock, newDoorState);
+                        break;
+                }
+                break;
+            }
+            case SOUTH: {
+                switch (door.getHinge()) {
+                    case LEFT:
+                        Block westBlock = doorBlock.getRelative(BlockFace.WEST, 1);
+                        updateNextDoor(door, westBlock, newDoorState);
+                        break;
+                    case RIGHT:
+                        Block eastBlock = doorBlock.getRelative(BlockFace.EAST, 1);
+                        updateNextDoor(door, eastBlock, newDoorState);
+                        break;
+                }
+                break;
+            }
+            case EAST: {
+                switch (door.getHinge()) {
+                    case LEFT:
+                        Block southBlock = doorBlock.getRelative(BlockFace.SOUTH, 1);
+                        updateNextDoor(door, southBlock, newDoorState);
+                        break;
+                    case RIGHT:
+                        Block northBlock = doorBlock.getRelative(BlockFace.NORTH, 1);
+                        updateNextDoor(door, northBlock, newDoorState);
+                        break;
+                }
+                break;
+            }
+            case WEST: {
+                switch (door.getHinge()) {
+                    case LEFT:
+                        Block northBlock = doorBlock.getRelative(BlockFace.NORTH, 1);
+                        updateNextDoor(door, northBlock, newDoorState);
+                        break;
+                    case RIGHT:
+                        Block southBlock = doorBlock.getRelative(BlockFace.SOUTH, 1);
+                        updateNextDoor(door, southBlock, newDoorState);
+                        break;
+                }
+                break;
+            }
         }
     }
 
-    private void updateNextDoors(Door originalDoor, Block block1, Block block2, boolean open) {
-        if (DoorUtils.isDoorBlock(block1)) {
-            BlockState doorState1 = block1.getState();
-            Door otherDoor = (Door) doorState1.getBlockData();
+    private void updateNextDoor(Door originalDoor, Block block, boolean open) {
+        if (DoorUtils.isDoorBlock(block)) {
+            BlockState doorState = block.getState();
+            Door otherDoor = (Door) doorState.getBlockData();
             if (!originalDoor.getHinge().equals(otherDoor.getHinge())) {
-                DoorUtils.setDoorOpen(block1, open);
-            }
-        }
-        if (DoorUtils.isDoorBlock(block2)) {
-            BlockState doorState2 = block2.getState();
-            Door otherDoor = (Door) doorState2.getBlockData();
-            if (!originalDoor.getHinge().equals(otherDoor.getHinge())) {
-                DoorUtils.setDoorOpen(block2, open);
+                DoorUtils.setDoorOpen(block, open);
             }
         }
     }
