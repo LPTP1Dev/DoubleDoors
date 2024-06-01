@@ -9,6 +9,8 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.block.BlockFace;
 
+import static org.bukkit.Bukkit.getServer;
+
 public class InteractWithDoorEvent implements Listener {
     @EventHandler
     public void onInteractWithDoor(PlayerInteractEvent event) { // This method is called when a player interacts with a block
@@ -30,11 +32,11 @@ public class InteractWithDoorEvent implements Listener {
                 switch(door.getHinge()) {
                     case LEFT:
                         Block eastBlock = doorBlock.getRelative(BlockFace.EAST, 1);
-                        updateNextDoor(door, eastBlock, newDoorState);
+                        updateNextDoor(doorBlock, eastBlock, newDoorState);
                         break;
                     case RIGHT:
                         Block westBlock = doorBlock.getRelative(BlockFace.WEST, 1);
-                        updateNextDoor(door, westBlock, newDoorState);
+                        updateNextDoor(doorBlock, westBlock, newDoorState);
                         break;
                 }
                 break;
@@ -43,11 +45,11 @@ public class InteractWithDoorEvent implements Listener {
                 switch (door.getHinge()) {
                     case LEFT:
                         Block westBlock = doorBlock.getRelative(BlockFace.WEST, 1);
-                        updateNextDoor(door, westBlock, newDoorState);
+                        updateNextDoor(doorBlock, westBlock, newDoorState);
                         break;
                     case RIGHT:
                         Block eastBlock = doorBlock.getRelative(BlockFace.EAST, 1);
-                        updateNextDoor(door, eastBlock, newDoorState);
+                        updateNextDoor(doorBlock, eastBlock, newDoorState);
                         break;
                 }
                 break;
@@ -56,11 +58,11 @@ public class InteractWithDoorEvent implements Listener {
                 switch (door.getHinge()) {
                     case LEFT:
                         Block southBlock = doorBlock.getRelative(BlockFace.SOUTH, 1);
-                        updateNextDoor(door, southBlock, newDoorState);
+                        updateNextDoor(doorBlock, southBlock, newDoorState);
                         break;
                     case RIGHT:
                         Block northBlock = doorBlock.getRelative(BlockFace.NORTH, 1);
-                        updateNextDoor(door, northBlock, newDoorState);
+                        updateNextDoor(doorBlock, northBlock, newDoorState);
                         break;
                 }
                 break;
@@ -69,11 +71,11 @@ public class InteractWithDoorEvent implements Listener {
                 switch (door.getHinge()) {
                     case LEFT:
                         Block northBlock = doorBlock.getRelative(BlockFace.NORTH, 1);
-                        updateNextDoor(door, northBlock, newDoorState);
+                        updateNextDoor(doorBlock, northBlock, newDoorState);
                         break;
                     case RIGHT:
                         Block southBlock = doorBlock.getRelative(BlockFace.SOUTH, 1);
-                        updateNextDoor(door, southBlock, newDoorState);
+                        updateNextDoor(doorBlock, southBlock, newDoorState);
                         break;
                 }
                 break;
@@ -81,10 +83,22 @@ public class InteractWithDoorEvent implements Listener {
         }
     }
 
-    private void updateNextDoor(Door originalDoor, Block block, boolean open) {
+    private void updateNextDoor(Block doorBlock, Block block, boolean open) {
+        Block blockBelowDoor = doorBlock.getWorld().getBlockAt(doorBlock.getLocation().add(0, -1, 0));
+        Block blockBelowNext = block.getWorld().getBlockAt(block.getLocation().add(0, -1, 0));
+
+        if (DoorUtils.isDoorBlock(blockBelowDoor) && !DoorUtils.isDoorBlock(blockBelowNext)) {
+            return;
+        }
+        if (!DoorUtils.isDoorBlock(blockBelowDoor) && DoorUtils.isDoorBlock(blockBelowNext)) {
+            return;
+        }
+
+        BlockState doorState = doorBlock.getState();
+        Door originalDoor = (Door) doorState.getBlockData();
         if (DoorUtils.isDoorBlock(block)) {
-            BlockState doorState = block.getState();
-            Door otherDoor = (Door) doorState.getBlockData();
+            BlockState nextDoorState = block.getState();
+            Door otherDoor = (Door) nextDoorState.getBlockData();
             if (!originalDoor.getHinge().equals(otherDoor.getHinge())) {
                 DoorUtils.setDoorOpen(block, open);
             }
